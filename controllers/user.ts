@@ -37,7 +37,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
                     req.query.group && [
                         (req.query.group) as string, 
                         [db.fn('COUNT', db.col('user.createdBy')), 'count']]) || ['id', 'username', 'roleid', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt'],
-                order: [[req.query.orderBy as string, req.query.order as string || 'ASC']],
+                order: [[req.query.orderBy as string || 'id', req.query.order as string || 'ASC']],
                 limit: _limit,
                 offset: _offset,
                 include: [
@@ -95,9 +95,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
             return res.json({ msg: "User not found" })
         }
-        res.json({ msg: "Successfully updated todo " })
+        res.json({ msg: "Successfully updated user " })
 
-    } catch (e) {
-        res.status(500).json({ msg: "Failed to create" })
+    } catch (e:any) {
+        res.status(500).json({ msg: "Failed to update a user",error:e.errors[0].message, })
     }
 }

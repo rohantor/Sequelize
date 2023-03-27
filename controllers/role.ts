@@ -25,8 +25,8 @@ export const updateRole = async (req: express.Request, res: express.Response) =>
             return res.json({ msg: "Role not found" })
         }
         res.json({ msg: "Successfully updated role " })
-    } catch (e) {
-        res.status(500).json({ msg: "Failed to update role" })
+    } catch (e:any) {
+        res.status(500).json({ msg: "Failed to update role" ,error:e.errors[0].message})
     }
 }
 export const getRoleById = async (req: express.Request, res: express.Response)=>{
