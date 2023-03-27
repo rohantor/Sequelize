@@ -10,10 +10,6 @@ router.post('/', async (req, res) => {
     } catch (e) {
         res.status(500).json({ msg: "Failed to create" })
     }
-
-
-
-
 })
 
 router.get('/', async (req, res) => {

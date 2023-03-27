@@ -1,49 +1,64 @@
-
-import { DataTypes, Model } from "sequelize"; 
+import bcrypt from 'bcrypt'
+import { DataTypes, Model } from "sequelize";
 import { db } from "../config";
-
+import { Role } from './role'
 export const User = db.define('User', {
-    // Model attributes are defined here
     id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
-        allowNull:false,
-        unique:true,
-        autoIncrement:true,
+        primaryKey: true,
+        allowNull: false,
+        unique: true,
+        autoIncrement: true,
     },
-    username:{
+    username: {
         type: DataTypes.STRING,
-        allowNull:false,
-        unique:true,
+        allowNull: false,
+        unique: true,
+        validate: {
+            isLowercase: true,
+            notEmpty: true
+        },
+        get() {
+            return this.getDataValue('username').toUpperCase();
+        }
 
     },
-    password:{
+    password: {
         type: DataTypes.STRING,
-        allowNull:false,
+        allowNull: false,
+        validate: {
+            notNull: true,
+            notEmpty: true,
+        },
+        set(value: string) {
+            this.setDataValue('password', bcrypt.hashSync(value, 10));
+        }
     },
-    roleid:{
+    roleid: {
         type: DataTypes.INTEGER,
-        allowNull:false,
-
+        allowNull: false,
     },
-    createdBy:{
+    createdBy: {
         type: DataTypes.INTEGER,
-        allowNull:false,
+        allowNull: false,
     },
     updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    deletedBy:{
+    deletedBy: {
         type: DataTypes.INTEGER,
-        defaultValue:null,
+        defaultValue: null,
     },
-    deletedAt:{
+    deletedAt: {
         type: DataTypes.DATE,
-        defaultValue:null,
+        defaultValue: null,
     }
 }, {
-    tableName:'user'
+    tableName: 'user'
 });
 
 
+User.belongsTo(Role, {
+    foreignKey: 'roleid'
+});
